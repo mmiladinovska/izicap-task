@@ -1,11 +1,10 @@
 package com.example.izicaptask.sirene_integration;
 
-import static com.example.izicaptask.utils.ErrorMessages.errorCallingSireneApiErrorMessage;
 import static com.example.izicaptask.sirene_integration.SireneEndpoints.COMPANYINFORMATION_BY_SIRET_ENDPOINT;
-
-import java.util.function.Function;
+import static com.example.izicaptask.utils.ErrorMessages.errorCallingSireneApiErrorMessage;
 
 import com.example.izicaptask.model.CompanyInformation;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,12 +22,12 @@ public class SireneApiIntegrationService {
 
     private final WebClient webClientSirene;
 
-    public String getCompanyInformation(String siret) {
+    public CompanyInformation getCompany(String siret) {
         return webClientSirene.get()
                 .uri(ESTABLISHMENT_BY_SIRET_PATH + "/" + siret)
                 .retrieve()
                 .onStatus(HttpStatus::isError, errorResponse())
-                .bodyToMono(String.class)
+                .bodyToMono(CompanyInformation.class)
                 .block();
     }
 
@@ -46,6 +45,3 @@ public class SireneApiIntegrationService {
                         );
     }
 }
-
-
-

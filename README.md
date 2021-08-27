@@ -4,17 +4,22 @@ of active businesses in the system.
 
 # Build the application
 ```mvn clean package```
+
 ## Run the application
 Open `IzicapTaskApplication` class and select Run/Debug.
 
-##Run docker image
-`docker run springio/gs-spring-boot-docker:latest`
-
 ## Run tests
 Navigate to the project root folder and run the command
-```mvn test```
+`mvn test`
 
-About the solution:
+## Run docker image
+`docker run springio/gs-spring-boot-docker:latest`
+
+## Run jenkins pipeline
+Prior to building the project by running the jenkins pipeline, please make sure to have defined Maven installation
+in the Global Tool Configuration: add Maven -> set name to M3 -> select latest version 3.8.2
+
+## About the solution:
 The businesses are identified by their SIRET.
 
 The solution is a microservice which queries the public API for given SIRET numbers and saves new or updates the 
@@ -34,6 +39,7 @@ i.e. in a csv file with a header of the following fields:
   company name
   last update date 
 `
+
 The full name is taken as concatenation of the last name, usualname, firstname1, firstname2, firstname3, and 
 firstname4.
 The siret number is not mentioned to be stored within the task, however as it is an identifier, it is added, as well as

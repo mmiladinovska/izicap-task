@@ -1,11 +1,11 @@
 package com.example.izicaptask.sirene_integration;
 
 import io.netty.channel.ChannelOption;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-
 import java.util.concurrent.TimeUnit;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,8 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+import javax.net.ssl.SSLException;
+
 @Configuration
 @RequiredArgsConstructor
 public class SireneWebClient {
@@ -22,10 +24,16 @@ public class SireneWebClient {
     private final SireneProperties sireneProperties;
 
     @Bean
-    public WebClient webClientSirene() {
+    public WebClient webClientSirene() throws SSLException {
 
-        var httpClient = HttpClient
+        var sslContext = SslContextBuilder
+                .forClient()
+                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                .build();
+
+        HttpClient httpClient = HttpClient
                 .create()
+                .secure(t -> t.sslContext(sslContext) )
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, sireneProperties.getTimeout())
                 .doOnConnected(connection -> {
                     connection
